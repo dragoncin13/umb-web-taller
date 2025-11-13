@@ -1,0 +1,21 @@
+<?php
+// api/login.php
+session_start();
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (!empty($data['usuario'])) {
+        $_SESSION['usuario'] = $data['usuario'];
+        echo json_encode(['mensaje' => 'Sesión iniciada', 'usuario' => $_SESSION['usuario']]);
+    } else {
+        http_response_code(400);
+        echo json_encode(['error' => 'usuario requerido']);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (isset($_SESSION['usuario'])) {
+        echo json_encode(['usuario' => $_SESSION['usuario']]);
+    } else {
+        echo json_encode(['usuario' => null]);
+    }
+}
